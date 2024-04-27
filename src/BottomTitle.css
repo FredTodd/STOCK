@@ -1,0 +1,12 @@
+/* BottomTitle.css */
+
+.bottom-title {
+    position: absolute;
+    bottom: 15%; /* Adjust as needed */
+    left: 50%;
+    transform: translate(-50%, 50%);
+    font-size: 3vw; /* Use viewport units for font size */
+    font-weight: bold;
+    color: #333;
+  }
+  

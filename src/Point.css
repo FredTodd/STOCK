@@ -1,0 +1,14 @@
+/* Point.css */
+
+.point {
+    position: absolute;
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Adjust size as needed */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .point:hover {
+    transform: scale(1.5); /* Increase the size of the circular point on hover */
+  }
