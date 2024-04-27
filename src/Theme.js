@@ -1,6 +1,7 @@
 // Theme.js
 
 import React, { createContext, useContext, useState } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 // Create a theme context
 const ThemeContext = createContext();
@@ -19,10 +20,18 @@ export const ThemeProvider = ({ children }) => {
     setIsDarkMode(prevMode => !prevMode);
   };
 
+  // Define the background color based on dark mode
+  const backgroundColor = isDarkMode ? '#1A202C' : '#FEFAE0';
+
   // Pass the theme context value to the provider
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      {children}
+      {/* Apply the background color directly to the root div */}
+      <div style={{ backgroundColor, minHeight: '100vh' }}>
+        <ChakraProvider>
+          {children}
+        </ChakraProvider>
+      </div>
     </ThemeContext.Provider>
   );
 };

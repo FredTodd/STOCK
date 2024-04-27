@@ -1,32 +1,29 @@
 // Point.js
 
-import React, { useState } from 'react';
+import React from 'react';
+import { Box } from '@chakra-ui/react'; // Import Chakra UI components
 
-const Point = ({ color, top, left, label, onMouseEnter, onMouseLeave, onClick }) => {
-  const [showLabel, setShowLabel] = useState(false);
-
-  const pointStyle = {
-    top,
-    left,
-    backgroundColor: color // Apply color inline
-  };
-
+const Point = ({ id, color, top, left, label, onMouseEnter, onMouseLeave, isHovered }) => {
   return (
-    <div
-      className="point"
-      style={pointStyle}
-      onMouseEnter={() => {
-        onMouseEnter();
-        setShowLabel(true); // Show label on hover
+    <Box
+      bg={color}
+      w="30px"
+      h="30px"
+      borderRadius="50%"
+      position="absolute"
+      top={top}
+      left={left}
+      cursor="pointer"
+      transition="transform 0.3s ease"
+      _hover={{
+        transform: 'scale(1.5)'
       }}
-      onMouseLeave={() => {
-        onMouseLeave();
-        setShowLabel(false); // Hide label when mouse leaves
-      }}
-      onClick={onClick} // Pass onClick handler
+      onMouseEnter={() => onMouseEnter(id)}
+      onMouseLeave={onMouseLeave}
+      zIndex="10"
     >
-      {showLabel && !label.startsWith('Toggle Dark Mode') && <div className="point-label">{label}</div>} {/* Render label if showLabel is true and not for the dark mode button */}
-    </div>
+      {isHovered && <div style={{ position: 'absolute', top: '-20px', left: '50%', transform: 'translateX(-50%)' }}>{label}</div>}
+    </Box>
   );
 };
 

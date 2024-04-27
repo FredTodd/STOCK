@@ -1,12 +1,14 @@
 // BottomTitle.js
 
 import React from 'react';
-import './BottomTitle.css'; // Import the corresponding CSS file
+import { Text } from '@chakra-ui/react'; // Import Chakra UI components
 
 const BottomTitle = ({ style }) => {
-    return (
-      <h2 className="bottom-title" style={style}>Dish Name</h2>
-    );
-  };
-  
-  export default BottomTitle;
+  return (
+    <Text fontSize="xl" fontWeight="bold" color="gray.700" style={style}>
+      Dish Name
+    </Text>
+  );
+};
+
+export default BottomTitle;
