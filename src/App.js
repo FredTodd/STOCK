@@ -1,14 +1,16 @@
-// App.js
-
 import React from 'react';
-import './App.css'; // Import the CSS file
-import Header from './Header'; // Import the Header component
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes from react-router-dom
+import HomePage from './Components/HomePage';
+import RecipePage from './Components/RecipePage';
 
 function App() {
   return (
-    <div className="App">
-      <Header /> {/* Render the Header component */}
-    </div>
+    <Router>
+      <Routes> {/* Use Routes wrapper */}
+        <Route path="/" element={<HomePage />} /> {/* Use element prop instead of component */}
+        <Route path="/recipes" element={<RecipePage />} /> {/* Use element prop instead of component */}
+      </Routes>
+    </Router>
   );
 }
 
