@@ -22,15 +22,27 @@ const Divider = styled.div`
   background-color: #000000; /* Black color */
 `;
 
+const Content = styled.div`
+  padding: 20px;
+`;
+
 const RecipePage = () => {
   return (
     <Container>
       <LeftSide>
-        {/* Content for the left side */}
+        <Content>
+          {/* Content for the left side */}
+          <h2>Left Side Content</h2>
+          <p>This is where you can display information related to the recipe.</p>
+        </Content>
       </LeftSide>
       <Divider />
       <RightSide>
-        {/* Content for the right side */}
+        <Content>
+          {/* Content for the right side */}
+          <h2>Right Side Content</h2>
+          <p>This is where you can display the details of the selected recipe.</p>
+        </Content>
       </RightSide>
     </Container>
   );

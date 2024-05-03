@@ -1,61 +1,61 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { useSpring, animated } from 'react-spring';
 
-// Styled components
 const Container = styled.div`
   display: flex;
   height: 100vh;
-  position: relative;
+  overflow-x: hidden; /* Hide horizontal overflow */
+`;
+
+const Content = styled.div`
+  display: flex;
+  position: relative; /* Ensure relative positioning for the divider */
+  width: 200%; /* Make content twice as wide as the viewport */
 `;
 
 const LeftSide = styled(animated.div)`
-  width: ${props => (props.expanded ? '70%' : '0%')};
-  background-color: #ffffff; /* Adjust as needed */
+  width: 70%;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2; /* Ensure left side is above the click area */
 `;
 
 const RightSide = styled(animated.div)`
-  width: ${props => (props.expanded ? '30%' : '100%')};
+  width: 30%; /* Adjust width to be visible from the start */
   background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* Span the entire height of the viewport */
-  z-index: 1; /* Ensure right side is below the click area */
+  overflow: hidden; /* Hide overflow to ensure proper animation */
 `;
 
-const Divider = styled.div`
+const Divider = styled(animated.div)`
   width: 4px;
-  background-color: #000000; /* Black color */
+  background-color: #000000;
+  height: 100vh; /* Span the entire height of the viewport */
   position: absolute;
   top: 0;
-  bottom: 0;
-  left: calc(70% - 2px); /* Position the divider */
 `;
 
 const Title = styled.h1`
   font-family: 'Poppins', sans-serif;
   font-size: 24px;
+  margin-bottom: 20px;
 `;
 
-const RecipeLink = styled(Link)`
+const RecipeLink = styled.a`
   font-family: 'Poppins', sans-serif;
   font-size: 18px;
   text-decoration: none;
-  color: #000000; /* Black color */
+  color: #000000;
   margin-bottom: 10px;
 `;
 
 const RecipeImage = styled.img`
-  width: 200px;
-  height: 150px;
-  object-fit: cover;
-  margin-bottom: 10px;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 20px;
 `;
 
 const RecipesContainer = styled.div`
@@ -64,62 +64,56 @@ const RecipesContainer = styled.div`
   align-items: center;
 `;
 
-const ClickArea = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: ${props => props.width};
+const ClickArea = styled(animated.div)`
+  flex: 1;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const HomePage = () => {
   const [isLeftExpanded, setIsLeftExpanded] = useState(true);
-  const [isRightExpanded, setIsRightExpanded] = useState(true);
 
   const leftSideAnimation = useSpring({
-    width: isLeftExpanded ? '70%' : '0%',
+    width: isLeftExpanded ? '70%' : '100%',
   });
 
   const rightSideAnimation = useSpring({
-    width: isRightExpanded ? '30%' : '100%',
+    width: isLeftExpanded ? '30%' : '0%', /* Adjust initial width */
+    transform: isLeftExpanded ? 'translateX(0%)' : 'translateX(100%)',
+  });
+
+  const dividerAnimation = useSpring({
+    left: isLeftExpanded ? 'calc(70% - 2px)' : 'calc(100% - 2px)',
   });
 
   const handleClickLeft = () => {
     setIsLeftExpanded(!isLeftExpanded);
-    setIsRightExpanded(true);
-  };
-
-  const handleClickRight = () => {
-    setIsRightExpanded(!isRightExpanded);
-    setIsLeftExpanded(true);
   };
 
   return (
     <Container>
-      <LeftSide expanded={isLeftExpanded} style={leftSideAnimation}>
-        <Title>STOCK</Title>
-        <img src="/dinner.png" alt="Dinner" style={{ maxWidth: '80%', maxHeight: '80%' }} />
-      </LeftSide>
-      <Divider />
-      <RightSide expanded={isRightExpanded} style={rightSideAnimation}>
-        <Title>RECIPES</Title>
-        <RecipesContainer>
-          <RecipeLink to="/recipe1">
-            <RecipeImage src="/recipe1.jpg" alt="Recipe 1" />
-          </RecipeLink>
-          <RecipeLink to="/recipe2">
-            <RecipeImage src="/recipe2.jpg" alt="Recipe 2" />
-          </RecipeLink>
-          <RecipeLink to="/recipe3">
-            <RecipeImage src="/recipe3.jpg" alt="Recipe 3" />
-          </RecipeLink>
-          <RecipeLink to="/recipe4">
-            <RecipeImage src="/recipe4.jpg" alt="Recipe 4" />
-          </RecipeLink>
-        </RecipesContainer>
-      </RightSide>
-      <ClickArea width="70%" onClick={handleClickLeft} />
-      <ClickArea width="30%" onClick={handleClickRight} style={{ left: '70%' }} />
+      <Content>
+        <LeftSide expanded={isLeftExpanded} style={leftSideAnimation}>
+          <ClickArea onClick={handleClickLeft} />
+          <Title>STOCK</Title>
+          <RecipeImage src="/dinner.png" alt="Dinner" />
+        </LeftSide>
+        <Divider style={dividerAnimation} />
+        <RightSide expanded={!isLeftExpanded} style={rightSideAnimation}>
+          <RecipesContainer>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <RecipeLink key={index} href={`/recipe${index + 1}`}>
+                <RecipeImage src={`/recipe${index + 1}.jpg`} alt={`Recipe ${index + 1}`} />
+              </RecipeLink>
+            ))}
+          </RecipesContainer>
+        </RightSide>
+      </Content>
     </Container>
   );
 };

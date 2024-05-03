@@ -6,3 +6,12 @@ body {
   background-color: #FEFAE0; /* Adjust as needed */
   overflow: hidden;
 }
+
+.divider {
+  width: 4px;
+  background-color: #000000; /* Black color */
+  height: 100vh; /* Make the divider span the entire height of the viewport */
+  position: absolute;
+  top: 0;
+  left: calc(70% - 2px); /* Position the divider at 70% of the viewport width */
+}

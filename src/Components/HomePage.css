@@ -12,11 +12,11 @@
   
   .right-side {
     width: 30%;
-    background-color: #ffffff;
+    height: 100%;
   }
   
   .divider {
-    width: 3px;
+    width: 5px;
     background-color: #000000;
   }
   
