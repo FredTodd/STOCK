@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSpring, animated } from 'react-spring';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 
 const Container = styled.div`
   display: flex;
@@ -16,17 +17,20 @@ const Content = styled.div`
 
 const LeftSide = styled(animated.div)`
   width: 70%;
-  background-color: #ffffff;
+  background-color: #FEFAE0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+  cursor: ${props => (props.clickable ? 'pointer' : 'default')}; /* Change cursor based on clickable state */
 `;
 
 const RightSide = styled(animated.div)`
   width: 30%; /* Adjust width to be visible from the start */
-  background-color: #ffffff;
+  background-color: #FEFAE0;
   overflow: hidden; /* Hide overflow to ensure proper animation */
+  cursor: pointer;
 `;
 
 const Divider = styled(animated.div)`
@@ -37,13 +41,18 @@ const Divider = styled(animated.div)`
   top: 0;
 `;
 
-const Title = styled.h1`
+const Title = styled.a`
   font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 4rem; /* Increase font size */
+  margin: 20px 0; /* Reset margin */
+  align-self: flex-start; /* Move title to top left */
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent */
 `;
 
 const RecipeLink = styled.a`
+  display: flex;
+  align-items: center; /* Center items vertically */
   font-family: 'Poppins', sans-serif;
   font-size: 18px;
   text-decoration: none;
@@ -52,31 +61,33 @@ const RecipeLink = styled.a`
 `;
 
 const RecipeImage = styled.img`
-  width: 100%;
-  max-width: 200px;
-  height: auto;
-  margin-bottom: 20px;
+  width: 180px; /* Set image width */
+  height: 180px; /* Set image height */
+  margin-right: 10px; /* Add spacing between image and title */
 `;
 
 const RecipesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Center items horizontally */
 `;
 
 const ClickArea = styled(animated.div)`
   flex: 1;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
   width: 100%;
+`;
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
+const RecipesTitle = styled.h2`
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  writing-mode: vertical-rl; /* Set writing mode to vertical right-to-left */
+  margin: 5px; /* Add margin for spacing */
 `;
 
 const HomePage = () => {
   const [isLeftExpanded, setIsLeftExpanded] = useState(true);
+  const [leftSideClicked, setLeftSideClicked] = useState(false); // Track whether left side has been clicked
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const leftSideAnimation = useSpring({
     width: isLeftExpanded ? '70%' : '100%',
@@ -91,24 +102,53 @@ const HomePage = () => {
     left: isLeftExpanded ? 'calc(70% - 2px)' : 'calc(100% - 2px)',
   });
 
+  const imageAnimation = useSpring({
+    maxWidth: isLeftExpanded ? '90%' : '70%', // Adjust width based on expanded state
+  });
+
   const handleClickLeft = () => {
-    setIsLeftExpanded(!isLeftExpanded);
+    if (!leftSideClicked) {
+      setIsLeftExpanded(!isLeftExpanded);
+      setLeftSideClicked(true); // Set left side clicked to true after the first click
+    }
+  };
+
+  const handleClickRight = () => {
+    // Programmatically navigate to a new page when right side is clicked
+    navigate('/newpage');
   };
 
   return (
     <Container>
       <Content>
-        <LeftSide expanded={isLeftExpanded} style={leftSideAnimation}>
-          <ClickArea onClick={handleClickLeft} />
-          <Title>STOCK</Title>
-          <RecipeImage src="/dinner.png" alt="Dinner" />
+        <LeftSide
+          clickable={!leftSideClicked} // Make clickable only if left side is not clicked
+          expanded={isLeftExpanded}
+          style={leftSideAnimation}
+          onClick={handleClickLeft}
+        >
+          <Title href="/">STOCK</Title>
+          <ClickArea />
+          <animated.img
+            src="/dinner.png"
+            alt="Dinner"
+            style={{ ...imageAnimation, marginBottom: '30%' }}
+          />
         </LeftSide>
         <Divider style={dividerAnimation} />
-        <RightSide expanded={!isLeftExpanded} style={rightSideAnimation}>
+        <RightSide
+          expanded={!isLeftExpanded}
+          style={rightSideAnimation}
+          onClick={handleClickRight}
+        >
           <RecipesContainer>
+            <RecipesTitle>RECIPES</RecipesTitle>
             {Array.from({ length: 4 }).map((_, index) => (
               <RecipeLink key={index} href={`/recipe${index + 1}`}>
-                <RecipeImage src={`/recipe${index + 1}.jpg`} alt={`Recipe ${index + 1}`} />
+                <RecipeImage
+                  src={`/IMG_0518.JPG`}
+                  alt={`Recipe ${index + 1}`}
+                />
               </RecipeLink>
             ))}
           </RecipesContainer>
