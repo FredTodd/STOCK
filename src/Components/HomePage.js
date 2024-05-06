@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom';
 const Container = styled.div`
   display: flex;
   height: 100vh;
-  overflow-x: hidden;
+  overflow: hidden;
 `;
 
 const Content = styled.div`
   display: flex;
   position: relative;
-  width: 100%; /* Adjusted to 100% */
+  width: 100%;
 `;
 
 const LeftSide = styled(animated.div)`
@@ -24,6 +24,7 @@ const LeftSide = styled(animated.div)`
   align-items: flex-start;
   padding: 20px;
   cursor: ${props => (props.clickable ? 'pointer' : 'default')};
+  position: relative;
 `;
 
 const RightSide = styled(animated.div)`
@@ -31,9 +32,9 @@ const RightSide = styled(animated.div)`
   background-color: #FEFAE0;
   overflow: hidden;
   cursor: pointer;
-  display: flex; /* Ensure flex layout */
-  flex-direction: column; /* Arrange children vertically */
-  justify-content: flex-start; /* Align items to the start vertically */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const Divider = styled(animated.div)`
@@ -47,26 +48,57 @@ const Divider = styled(animated.div)`
 const Title = styled.a`
   font-family: 'Poppins', sans-serif;
   font-size: 4rem;
-  margin: 20px 20px 0 20px; /* Adjusted margin */
+  margin: 20px 20px 0 20px;
   text-decoration: none;
   color: inherit;
 `;
 
+const PlateImage = styled.img`
+  width: ${props => (props.isExpanded ? '60%' : '45%')};
+  height: auto;
+  margin-bottom: 5%;
+  display: block;
+  margin: auto;
+`;
+
+const GreenPoint = styled(animated.div)`
+  width: 20px;
+  height: 20px;
+  background-color: darkgreen;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 999;
+  cursor: pointer;
+
+  /* Hover effect */
+  &:hover::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 100%;
+    background-color: darkgreen;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1; /* Ensure the line appears above the GreenPoint */
+  }
+`;
+
 const RecipeLink = styled.div`
   display: flex;
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
-  margin-bottom: 20px; /* Increased margin */
-  cursor: pointer; /* Change cursor to pointer */
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  cursor: pointer;
 `;
 
 const RecipeImage = styled.img`
-  width: 50%; /* Adjusted image width */
-  height: auto; /* Maintain aspect ratio */
-  margin-right: 10px; /* Add spacing between image and title */
-  margin: auto; /* Center the image horizontally */
-  display: block; /* Ensure proper centering */
-  max-height: 100%; /* Limit the image height to avoid overflow */
+  width: 50%;
+  height: auto;
+  margin-right: 10px;
+  margin: auto;
+  display: block;
+  max-height: 100%;
 `;
 
 const RecipesContainer = styled.div`
@@ -75,33 +107,21 @@ const RecipesContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
-  margin-top: -50px; /* Adjusted margin */
-`;
-
-const ClickArea = styled(animated.div)`
-  flex: 1;
-  width: 100%;
-`;
-
-const DinnerImage = styled.img`
-  width: ${props => (props.isExpanded ? '60%' : '45%')}; /* Adjusted image width based on expanded state */
-  height: auto; /* Maintain aspect ratio */
-  margin-bottom: 5%; /* Add spacing to the bottom */
-  display: block; /* Ensure proper centering */
-  margin: auto; /* Center the image horizontally */
+  margin-top: -50px;
 `;
 
 const RecipesTitle = styled.h2`
   font-family: 'Poppins', sans-serif;
   font-size: 2rem;
-  writing-mode: vertical-rl; /* Set writing mode to vertical right-to-left */
-  margin: 20px 90% 0 20px; /* Adjusted margin */
+  writing-mode: vertical-rl;
+  margin: 20px 90% 0 20px;
   width: 5%;
 `;
 
 const HomePage = () => {
   const [isLeftExpanded, setIsLeftExpanded] = useState(true);
   const [leftSideClicked, setLeftSideClicked] = useState(false);
+  const [greenPointsVisible, setGreenPointsVisible] = useState(false);
   const navigate = useNavigate();
 
   const leftSideAnimation = useSpring({
@@ -117,15 +137,20 @@ const HomePage = () => {
     left: isLeftExpanded ? 'calc(70% - 2px)' : 'calc(100% - 2px)',
   });
 
+  const greenPointAnimation = useSpring({
+    opacity: greenPointsVisible ? 1 : 0,
+  });
+
   const handleClickLeft = () => {
     if (!leftSideClicked) {
       setIsLeftExpanded(!isLeftExpanded);
       setLeftSideClicked(true);
+      setGreenPointsVisible(true);
     }
   };
 
   const handleClickRight = () => {
-    navigate('/newpage');
+    navigate('/RecipePage');
   };
 
   return (
@@ -138,13 +163,20 @@ const HomePage = () => {
           onClick={handleClickLeft}
         >
           <Title href="/">STOCK</Title>
-          <ClickArea />
-          <DinnerImage
-            src="/dinner.png"
-            alt="Dinner"
-            style={{ marginBottom: '30%' }} // Removed imageAnimation
-            isExpanded={isLeftExpanded} // Added isExpanded prop
+          <PlateImage
+            src="/plate.png"
+            alt="Plate"
+            isExpanded={isLeftExpanded}
           />
+          {greenPointsVisible && (
+            <>
+              <GreenPoint style={{ top: '35%', left: '9%' }} />
+              <GreenPoint style={{ top: '70%', left: '20%' }} />
+              <GreenPoint style={{ top: '30%', left: '75%' }} />
+              <GreenPoint style={{ top: '50%', left: '90%' }} />
+              <GreenPoint style={{ top: '80%', left: '80%' }} />
+            </>
+          )}
         </LeftSide>
         <Divider style={dividerAnimation} />
         <RightSide
