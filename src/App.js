@@ -4,6 +4,9 @@ import HomePage from './Components/HomePage';
 import RecipePage from './Components/RecipePage';
 
 function App() {
+
+  
+
   return (
     <Router>
       <Routes> {/* Use Routes wrapper */}
@@ -11,6 +14,7 @@ function App() {
         <Route path="/RecipePage" element={<RecipePage />} /> {/* Use element prop instead of component */}
       </Routes>
     </Router>
+    
   );
 }
 
