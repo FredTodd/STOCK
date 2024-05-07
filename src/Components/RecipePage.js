@@ -3,44 +3,105 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
+  overflow-x: auto;
+  flex-direction: column;
+  align-items: center;
   height: 100vh;
-  overflow: hidden;
 `;
 
-const LeftColumn = styled.div`
+const FilterBar = styled.div`
   width: 20%;
+  background-color: #606C38;
   position: fixed;
-  top: 0;
+  top: 18%;
   bottom: 0;
-  left: 0;
-  background-color: #FEFAE0;
-  /* Add additional styling for the filter bar */
+  left: -1%;
+  overflow-y: auto;
+  border-radius: 16px;
 `;
 
-const RightColumn = styled.div`
+const Content = styled.div`
+  padding: 20px;
+  overflow-y: auto;
+  margin-left: 20%;
+  width: 80%;
   flex: 1;
-  padding-left: 20%; /* Same width as LeftColumn */
-  overflow-y: auto; /* Enable vertical scrolling */
 `;
 
-const Header = styled.h1`
+const Title = styled.h1`
   font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
+  font-size: 4rem;
   font-weight: bold;
-  margin: 20px;
+  margin: 20px 20px 0 20px;
+  text-decoration: none;
+  color: #283618;
+  position: absolute;
+  z-index: 1;
+  left: 1%;
+`;
+
+const RecipeGallery = styled.div`
+  display: grid;
+  gap: 20px;
+  padding-bottom: 20px;
+  max-width: calc(100% - 100px);
+  overflow-x: hidden;
+  margin-left: 50px;
+  margin-top: 12%;
+  
+  @media (min-width: 1px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (min-width: 1700px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  @media (min-width: 1900px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+`;
+
+const RecipeThumbnail = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 10px);
+  max-width: 70%;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const ThumbnailImage = styled.img`
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 16px;
+`;
+
+const RecipeTitle = styled.p`
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  margin-top: 8px;
   color: #283618;
 `;
 
 const RecipePage = () => {
   return (
     <Container>
-      <LeftColumn>
-        {/* Add filter bar content here */}
-      </LeftColumn>
-      <RightColumn>
-        <Header>STOCK</Header>
-        {/* Add recipe gallery here */}
-      </RightColumn>
+      <FilterBar>
+        {/* Filter options will go here */}
+      </FilterBar>
+      <Content>
+        <Title>STOCK</Title>
+        <RecipeGallery>
+          {Array.from({ length: 15 }).map((_, index) => (
+            <RecipeThumbnail key={index}>
+              <ThumbnailImage src="/IMG_0518.JPG" alt={`Recipe ${index + 1}`} />
+              <RecipeTitle>Recipe {index + 1}</RecipeTitle>
+            </RecipeThumbnail>
+          ))}
+        </RecipeGallery>
+      </Content>
     </Container>
   );
 };

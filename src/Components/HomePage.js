@@ -39,8 +39,8 @@ const RightSide = styled(animated.div)`
 
 const Divider = styled(animated.div)`
   width: 4px;
-  background-color: #000000;
-  height: 100vh;
+  background-color: #283618;
+  height: 200vh;
   position: absolute;
   top: 0;
 `;
@@ -90,7 +90,7 @@ const Annotation = styled(animated.div)`
 `;
 
 const IngredientBox = styled(animated.div)`
-  background-color: rgba(40, 54, 24, 0.9);
+  background-color: #606C38;
   border-radius: 50%; /* Add border-radius to make it a circle */
   position: absolute;
   z-index: 1000;
@@ -102,7 +102,7 @@ const IngredientBox = styled(animated.div)`
   justify-content: center;
   align-items: center;
   padding: 20px;
-  color: #B8E6B8;
+  color: #283618;
   font-family: 'Poppins', sans-serif;
   font-size: 2rem;
   text-align: center;
@@ -118,7 +118,7 @@ const CloseButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 2rem;
-  color: #B8E6B8;
+  color: #283618;
 `;
 
 const RecipeLink = styled.div`
@@ -243,7 +243,7 @@ const HomePage = () => {
   const handleClickRight = () => {
     navigate('/RecipePage');
   };
-
+  
   const handleGreenPointClick = ingredient => {
     setIngredientClicked(ingredient);
   };

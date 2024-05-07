@@ -8,7 +8,7 @@ function App() {
     <Router>
       <Routes> {/* Use Routes wrapper */}
         <Route path="/" element={<HomePage />} /> {/* Use element prop instead of component */}
-        <Route path="/recipes" element={<RecipePage />} /> {/* Use element prop instead of component */}
+        <Route path="/RecipePage" element={<RecipePage />} /> {/* Use element prop instead of component */}
       </Routes>
     </Router>
   );
