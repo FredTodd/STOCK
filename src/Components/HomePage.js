@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSpring, animated } from 'react-spring';
 import { useNavigate } from 'react-router-dom';
@@ -48,40 +48,77 @@ const Divider = styled(animated.div)`
 const Title = styled.a`
   font-family: 'Poppins', sans-serif;
   font-size: 4rem;
+  font-weight: bold;
   margin: 20px 20px 0 20px;
   text-decoration: none;
-  color: inherit;
+  color: #283618;
 `;
 
 const PlateImage = styled.img`
-  width: ${props => (props.isExpanded ? '60%' : '45%')};
-  height: auto;
-  margin-bottom: 5%;
+  max-width: ${props => (props.isExpanded ? '60%' : '40%')}; /* Added max-width */
   display: block;
-  margin: auto;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const GreenPoint = styled(animated.div)`
   width: 20px;
   height: 20px;
-  background-color: darkgreen;
+  background-color: #283618;
   border-radius: 50%;
   position: absolute;
   z-index: 999;
   cursor: pointer;
+`;
 
-  /* Hover effect */
-  &:hover::after {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 100%;
-    background-color: darkgreen;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1; /* Ensure the line appears above the GreenPoint */
-  }
+const Annotation = styled(animated.div)`
+  position: absolute;
+  background-color: rgba(40, 54, 24, 0.8);
+  color: #b8e6b8;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  opacity: ${props => (props.visible ? 1 : 0)};
+  /* Dynamically set position based on the green point */
+  top: ${props => props.top};
+  left: ${props => props.left};
+`;
+
+const IngredientBox = styled(animated.div)`
+  background-color: rgba(40, 54, 24, 0.9);
+  border-radius: 50%; /* Add border-radius to make it a circle */
+  position: absolute;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: #B8E6B8;
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  text-align: center;
+  width: 37vw; /* Set width to 25% of the viewport width */
+  height: 37vw; /* Set height to 25% of the viewport width */
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 5%;
+  right: 48%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  color: #B8E6B8;
 `;
 
 const RecipeLink = styled.div`
@@ -113,16 +150,60 @@ const RecipesContainer = styled.div`
 const RecipesTitle = styled.h2`
   font-family: 'Poppins', sans-serif;
   font-size: 2rem;
+  font-weight: bold;
   writing-mode: vertical-rl;
   margin: 20px 90% 0 20px;
   width: 5%;
+  color: #283618;
+`;
+
+const BottomTitle = styled.h3`
+  position: fixed;
+  bottom: -3%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #283618;
+  opacity: ${props => (props.isVisible ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out;
+  text-decoration: underline;
 `;
 
 const HomePage = () => {
   const [isLeftExpanded, setIsLeftExpanded] = useState(true);
+  const [showBottomTitle, setShowBottomTitle] = useState(false);
   const [leftSideClicked, setLeftSideClicked] = useState(false);
   const [greenPointsVisible, setGreenPointsVisible] = useState(false);
+  const [ingredientClicked, setIngredientClicked] = useState(null);
+  const [greenPointPositions, setGreenPointPositions] = useState({});
+  const [ingredientHovered, setIngredientHovered] = useState(null);
   const navigate = useNavigate();
+
+  // Define the text for each ingredient
+  const [ingredientText, setIngredientText] = useState({
+    'Ingredient 1': {
+      title: 'Title',
+      body: 'Text for Ingredient 1 blah blh blash ',
+    },
+    'Ingredient 2': {
+      title: 'Ingredient 2 Title',
+      body: 'Text for Ingredient 2',
+    },
+    'Ingredient 3': {
+      title: 'Ingredient 3 Title',
+      body: 'Text for Ingredient 3',
+    },
+    'Ingredient 4': {
+      title: 'Ingredient 4 Title',
+      body: 'Text for Ingredient 4',
+    },
+    'Ingredient 5': {
+      title: 'Ingredient 5 Title',
+      body: 'Text for Ingredient 5',
+    },
+  });
 
   const leftSideAnimation = useSpring({
     width: isLeftExpanded ? '70%' : '100%',
@@ -141,16 +222,39 @@ const HomePage = () => {
     opacity: greenPointsVisible ? 1 : 0,
   });
 
+  const annotationAnimation = useSpring({
+    opacity: ingredientClicked ? 1 : 0,
+    transform: ingredientClicked ? 'translate(-50%, -30px) scale(1)' : 'translate(-50%, -30px) scale(0)',
+  });
+
+  const ingredientBoxAnimation = useSpring({
+    opacity: ingredientClicked ? 1 : 0,
+    transform: ingredientClicked ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -50%) scale(0)',
+  });
+
   const handleClickLeft = () => {
     if (!leftSideClicked) {
       setIsLeftExpanded(!isLeftExpanded);
       setLeftSideClicked(true);
       setGreenPointsVisible(true);
+      setShowBottomTitle(true);
     }
   };
 
   const handleClickRight = () => {
     navigate('/RecipePage');
+  };
+
+  const handleGreenPointClick = ingredient => {
+    setIngredientClicked(ingredient);
+  };
+
+  const handleGreenPointHover = (ingredient, position) => {
+    setIngredientHovered(ingredient);
+  };
+
+  const handleCloseButtonClick = () => {
+    setIngredientClicked(null);
   };
 
   return (
@@ -170,13 +274,42 @@ const HomePage = () => {
           />
           {greenPointsVisible && (
             <>
-              <GreenPoint style={{ top: '35%', left: '9%' }} />
-              <GreenPoint style={{ top: '70%', left: '20%' }} />
-              <GreenPoint style={{ top: '30%', left: '75%' }} />
-              <GreenPoint style={{ top: '50%', left: '90%' }} />
-              <GreenPoint style={{ top: '80%', left: '80%' }} />
+              <GreenPoint
+                style={{ ...greenPointAnimation, top: '35%', left: '9%' }}
+                onMouseEnter={() => handleGreenPointHover('Ingredient 1', { top: '33%', left: '10%' })}
+                onClick={() => handleGreenPointClick('Ingredient 1')}
+              />
+              <GreenPoint
+                style={{ ...greenPointAnimation, top: '70%', left: '20%' }}
+                onMouseEnter={() => handleGreenPointHover('Ingredient 2', { top: '68%', left: '21%' })}
+                onClick={() => handleGreenPointClick('Ingredient 2')}
+              />
+              <GreenPoint
+                style={{ ...greenPointAnimation, top: '30%', left: '75%' }}
+                onMouseEnter={() => handleGreenPointHover('Ingredient 3', { top: '28%', left: '76%' })}
+                onClick={() => handleGreenPointClick('Ingredient 3')}
+              />
+              <GreenPoint
+                style={{ ...greenPointAnimation, top: '50%', left: '90%' }}
+                onMouseEnter={() => handleGreenPointHover('Ingredient 4', { top: '48%', left: '91%' })}
+                onClick={() => handleGreenPointClick('Ingredient 4')}
+              />
+              <GreenPoint
+                style={{ ...greenPointAnimation, top: '80%', left: '80%' }}
+                onMouseEnter={() => handleGreenPointHover('Ingredient 5', { top: '78%', left: '81%' })}
+                onClick={() => handleGreenPointClick('Ingredient 5')}
+              />
             </>
           )}
+
+          {ingredientClicked && (
+            <IngredientBox style={ingredientBoxAnimation}>
+              <CloseButton onClick={handleCloseButtonClick}>X</CloseButton>
+              <h3>{ingredientText[ingredientClicked].title}</h3>
+              <p>{ingredientText[ingredientClicked].body}</p>
+          </IngredientBox>
+          )}
+
         </LeftSide>
         <Divider style={dividerAnimation} />
         <RightSide
@@ -197,6 +330,7 @@ const HomePage = () => {
           </RecipesContainer>
         </RightSide>
       </Content>
+      <BottomTitle isVisible={showBottomTitle}>Dish Name</BottomTitle>
     </Container>
   );
 };
