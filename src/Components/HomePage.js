@@ -177,7 +177,6 @@ const HomePage = () => {
   const [leftSideClicked, setLeftSideClicked] = useState(false);
   const [greenPointsVisible, setGreenPointsVisible] = useState(false);
   const [ingredientClicked, setIngredientClicked] = useState(null);
-  const [greenPointPositions, setGreenPointPositions] = useState({});
   const [ingredientHovered, setIngredientHovered] = useState(null);
   const navigate = useNavigate();
 
