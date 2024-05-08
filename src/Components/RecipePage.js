@@ -15,7 +15,7 @@ const FilterBar = styled.div`
   width: 20%;
   height: 75vh;
   background-color: #606C38;
-  position: fixed;hmm
+  position: fixed;
   top: 18%;
   bottom: 0;
   left: -1%;
@@ -37,19 +37,19 @@ const FilterOption = styled.div`
   margin-bottom: 10px;
   text-align: center;
   padding: 10px 20px;
-  cursor: pointer; /* Add cursor pointer for clickable effect */
+  cursor: pointer; 
   color: #FEFAE0;
   background-color: #606C38;
-  border-radius: 13px; /* Make it a rounded square */
-  transition: background-color 0.3s ease; /* Add transition effect */
+  border-radius: 13px; 
+  transition: background-color 0.3s ease; 
   ${(props) => props.selected && `
-    background-color: #283618; /* Darker green when selected */
+    background-color: #283618; 
   `}
   border: 3px solid #283618;
 `;
 
 const TodaysRecipe = styled(Link)`
-  display: block; /* Make it a block element to occupy full width */
+  display: block; 
   margin-top: 40px;
   text-align: center;
   padding: 20px 40px;
@@ -60,12 +60,12 @@ const TodaysRecipe = styled(Link)`
   transition: background-color 0.3s ease;
   border: 3px solid #283618;
   font-size: 1.5rem;
-  text-decoration: none; /* Remove default underline */
+  text-decoration: none; 
 `;
 
 const RecipeOfTheDay = () => {
   return (
-    <TodaysRecipe to="/"> {/* Link to the desired page */}
+    <TodaysRecipe to="/"> 
       Today's Recipe
     </TodaysRecipe>
   );
@@ -104,15 +104,15 @@ const RecipeGallery = styled.div`
   overflow-x: hidden;
   margin-left: 50px;
   margin-top: 12%;
-  
+
   @media (min-width: 1px) {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   @media (min-width: 1700px) {
     grid-template-columns: repeat(4, 1fr);
   }
-  
+
   @media (min-width: 1900px) {
     grid-template-columns: repeat(5, 1fr);
   }
@@ -143,6 +143,7 @@ const RecipeTitle = styled.p`
 
 const RecipePage = () => {
   const [selectedFilter, setSelectedFilter] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
 
   const recipes = [
     { id: 1, image: "/IMG_0518.JPG", title: "Delicious Spaghetti Carbonara", category: "Veggie" },
@@ -163,9 +164,20 @@ const RecipePage = () => {
 
   const filteredRecipes = selectedFilter ? recipes.filter(recipe => recipe.category === selectedFilter) : recipes;
 
-  const convertToSlug = (text) => {
-    return text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
   };
+
+  // Filtered recipes and search results will be merged to display in RecipeGallery
+  const mergedRecipes = selectedFilter
+    ? recipes.filter(recipe => recipe.category === selectedFilter)
+    : recipes.concat(searchResults);
+
+    const convertToSlug = (text) => {
+        if (!text) return ''; // Return empty string if text is undefined
+        return text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+      };
+      
 
   return (
     <Container>
@@ -177,14 +189,14 @@ const RecipePage = () => {
         <RecipeOfTheDay />
       </FilterBar>
       <Content>
-        <HomeLink to="/"> {/* Link back to the home page */}
+        <HomeLink to="/">
           <Title>STOCK</Title>
-        </HomeLink>
-        {/* Integrate RecipeSearch component here */}
-        <RecipeSearch />
+          </HomeLink>
+        {/* RecipeSearch component with a callback to handle search results */}
+        <RecipeSearch onSearchResults={handleSearchResults} />
         <RecipeGallery>
-          {/* Use map to generate thumbnails for each recipe */}
-          {filteredRecipes.map(recipe => (
+          {/* Render merged recipes (existing and search results) */}
+          {mergedRecipes.map(recipe => (
             <Link to={`/recipe/${convertToSlug(recipe.title)}`} key={recipe.id}>
               <RecipeThumbnail>
                 <ThumbnailImage src={recipe.image} alt={recipe.title} />
