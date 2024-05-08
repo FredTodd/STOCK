@@ -64,3 +64,5 @@ Behind the scenes, STOCK leverages advanced technology to enhance the user exper
 In summary, STOCK is more than just a recipe website; it's a comprehensive resource for anyone passionate about cooking. Whether you're a seasoned chef or a novice cook, STOCK is here to inspire and empower you on your culinary journey.
 
 The project is solely created by Fred Todd and was uploaded to Github
+
+Live Deployment link: https://fredtodd.github.io/STOCK/
