@@ -197,7 +197,7 @@ const RecipePage = () => {
         <RecipeGallery>
           {/* Render merged recipes (existing and search results) */}
           {mergedRecipes.map(recipe => (
-            <Link to={`/recipe/${convertToSlug(recipe.title)}`} key={recipe.id}>
+            <Link to={`/recipe/${recipe.id}`} key={recipe.id}>
               <RecipeThumbnail>
                 <ThumbnailImage src={recipe.image} alt={recipe.title} />
                 <RecipeTitle>{recipe.title}</RecipeTitle>
