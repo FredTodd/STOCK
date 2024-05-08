@@ -66,7 +66,7 @@ const TodaysRecipe = styled(Link)`
 
 const RecipeOfTheDay = () => {
   return (
-    <TodaysRecipe to="/"> 
+    <TodaysRecipe to="/recipe/10"> 
       Today's Recipe
     </TodaysRecipe>
   );
@@ -126,6 +126,7 @@ const RecipeThumbnail = styled.div`
   max-width: 70%;
   align-items: center;
   margin-bottom: 20px;
+  overflow: hidden;
 `;
 
 const ThumbnailImage = styled.img`
@@ -147,15 +148,15 @@ const RecipePage = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   const recipes = [
-    { id: 1, image: "/IMG_0518.JPG", title: "Delicious Spaghetti Carbonara", category: "Veggie" },
-    { id: 2, image: "/IMG_0518.JPG", title: "Mouthwatering Chicken Alfredo", category: "Vegan" },
-    { id: 3, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Pescetarian" },
-    { id: 4, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Pescetarian" },
-    { id: 5, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Veggie" },
-    { id: 6, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Vegan" },
-    { id: 7, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Pescetarian" },
-    { id: 8, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Veggie" },
-    { id: 9, image: "/IMG_0518.JPG", title: "Savory Beef Stroganoff", category: "Vegan" },
+    { id: 1, image: "/Flapkjack.jpg", title: "Flapjack", category: "Veggie" },
+    { id: 2, image: "/Sausage.jpg", title: "Pork and Apple Sausage Rolls", category: "Meat" },
+    { id: 3, image: "/Dhal.jpg", title: "Red Lentil Dhal", category: "Vegan" },
+    { id: 4, image: "/Scotch_Egg.jpg", title: "Scotch Eggs", category: "Meat" },
+    { id: 5, image: "/Cookies.jpg", title: "Choc Chip Cookies", category: "Veggie" },
+    { id: 6, image: "/Samosa.jpg", title: "Veg Samosa's", category: "Vegan" },
+    { id: 7, image: "/Cornish_Pasty.JPG", title: "Cornish Pasties", category: "Meat" },
+    { id: 8, image: "/Bakewell.jpg", title: "Bakewell Tart", category: "Veggie" },
+    { id: 9, image: "/Sweet_Pork.jpg", title: "Sweet and Sour Pork", category: "Meat" },
     // Add more recipes here as needed
   ];
 
@@ -180,35 +181,36 @@ const RecipePage = () => {
       };
       
 
-  return (
-    <Container>
-      <FilterBar>
-        <FilterTitle>Show me...</FilterTitle>
-        <FilterOption selected={selectedFilter === 'Veggie'} onClick={() => handleFilterClick('Veggie')}>Veggie</FilterOption>
-        <FilterOption selected={selectedFilter === 'Vegan'} onClick={() => handleFilterClick('Vegan')}>Vegan</FilterOption>
-        <FilterOption selected={selectedFilter === 'Pescetarian'} onClick={() => handleFilterClick('Pescetarian')}>Pescetarian</FilterOption>
-        <RecipeOfTheDay />
-      </FilterBar>
-      <Content>
-        <HomeLink to="/">
-          <Title>STOCK</Title>
-          </HomeLink>
-        {/* RecipeSearch component with a callback to handle search results */}
-        <RecipeSearch onSearchResults={handleSearchResults} />
-        <RecipeGallery>
-          {/* Render merged recipes (existing and search results) */}
-          {recipes.map(recipe => (
-            <Link to={`/recipe/${recipe.id}`} key={recipe.id}>
-              <RecipeThumbnail>
-                <ThumbnailImage src={recipe.image} alt={recipe.title} />
-                <RecipeTitle>{recipe.title}</RecipeTitle>
-              </RecipeThumbnail>
-            </Link>
-          ))}
-        </RecipeGallery>
-      </Content>
-    </Container>
-  );
+      return (
+        <Container>
+          <FilterBar>
+            <FilterTitle>Show me...</FilterTitle>
+            <FilterOption selected={selectedFilter === 'Veggie'} onClick={() => handleFilterClick('Veggie')}>Veggie</FilterOption>
+            <FilterOption selected={selectedFilter === 'Vegan'} onClick={() => handleFilterClick('Vegan')}>Vegan</FilterOption>
+            <FilterOption selected={selectedFilter === 'Meat'} onClick={() => handleFilterClick('Meat')}>Meat</FilterOption>
+            <RecipeOfTheDay />
+          </FilterBar>
+          <Content>
+            <HomeLink to="/">
+              <Title>STOCK</Title>
+            </HomeLink>
+            {/* RecipeSearch component with a callback to handle search results */}
+            <RecipeSearch onSearchResults={handleSearchResults} />
+            <RecipeGallery>
+              {/* Render filtered or searched recipes */}
+              {mergedRecipes.map(recipe => (
+                <Link to={`/recipe/${recipe.id}`} key={recipe.id}>
+                  <RecipeThumbnail>
+                    <ThumbnailImage src={recipe.image} alt={recipe.title} />
+                    <RecipeTitle>{recipe.title}</RecipeTitle>
+                  </RecipeThumbnail>
+                </Link>
+              ))}
+            </RecipeGallery>
+          </Content>
+        </Container>
+      );
+      
 };
 
 export default RecipePage;

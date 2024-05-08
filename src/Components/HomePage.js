@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSpring, animated } from 'react-spring';
 import { useNavigate } from 'react-router-dom';
+import RecipeDetailPage from './RecipeDetailPage'; // Import the RecipeDetailPage component
 
 const Container = styled.div`
   display: flex;
@@ -102,9 +103,9 @@ const IngredientBox = styled(animated.div)`
   justify-content: center;
   align-items: center;
   padding: 20px;
-  color: #283618;
+  color: #FEFAE0;
   font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
+  font-size: 1.2rem;
   text-align: center;
   width: 37vw; /* Set width to 25% of the viewport width */
   height: 37vw; /* Set height to 25% of the viewport width */
@@ -157,9 +158,9 @@ const RecipesTitle = styled.h2`
   color: #283618;
 `;
 
-const BottomTitle = styled.h3`
+const BottomTitle = styled.a`
   position: fixed;
-  bottom: -3%;
+  bottom: 1%;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Poppins', sans-serif;
@@ -170,6 +171,7 @@ const BottomTitle = styled.h3`
   transition: opacity 0.3s ease-in-out;
   text-decoration: underline;
 `;
+
 
 const HomePage = () => {
   const [isLeftExpanded, setIsLeftExpanded] = useState(true);
@@ -183,24 +185,24 @@ const HomePage = () => {
   // Define the text for each ingredient
   const [ingredientText, setIngredientText] = useState({
     'Ingredient 1': {
-      title: 'Title',
-      body: 'Text for Ingredient 1 blah blh blash ',
+      title: 'Cod',
+      body: 'Fresh cod fillets, harvested from pristine waters, offer a clean, mild taste with a hint of sweetness. Perfect for grilling, baking, or frying, they pair effortlessly with lemon, herbs, and a variety of side dishes, making them a versatile and delightful addition to any meal.',
     },
     'Ingredient 2': {
-      title: 'Ingredient 2 Title',
-      body: 'Text for Ingredient 2',
+      title: 'Parsley',
+      body: 'Parsley, a vibrant herb with a refreshing taste, adds a burst of flavor to dishes. Whether used as a garnish or incorporated into recipes, its bright, slightly peppery notes elevate the overall taste. It complements a wide range of cuisines, from Mediterranean to Asian, and pairs wonderfully with seafood, meats, salads, and sauces.',
     },
     'Ingredient 3': {
-      title: 'Ingredient 3 Title',
-      body: 'Text for Ingredient 3',
+      title: 'Parmesan Cheese',
+      body: 'Grated Parmesan cheese, with its rich and nutty flavor, adds a savory depth to dishes. Versatile and beloved in Italian cuisine, it enhances pasta, risotto, salads, and soups with its sharp and salty taste. Its fine texture melts beautifully when sprinkled over hot dishes, making it a delightful finishing touch to elevate your culinary creations.',
     },
     'Ingredient 4': {
-      title: 'Ingredient 4 Title',
-      body: 'Text for Ingredient 4',
+      title: 'Fresh Breadcrumbs',
+      body: 'Fresh breadcrumbs, crafted from day-old bread, add a crispy texture and absorb flavors, perfect for coating meats and topping casseroles. They offer a simple yet effective way to elevate dishes with a satisfying crunch, enhancing both taste and presentation.',
     },
     'Ingredient 5': {
-      title: 'Ingredient 5 Title',
-      body: 'Text for Ingredient 5',
+      title: 'Lemons',
+      body: 'Lemons, with their vibrant color and tangy flavor, bring a refreshing zest to both sweet and savory dishes. From brightening up seafood with a squeeze of juice to adding a citrusy kick to desserts, lemons are versatile culinary gems. Their acidic brightness can balance rich flavors, while their aromatic zest adds depth to marinades, dressings, and cocktails.',
     },
   });
 
@@ -267,7 +269,7 @@ const HomePage = () => {
         >
           <Title href="/">STOCK</Title>
           <PlateImage
-            src="/plate.png"
+            src="/Cod_Mornay.png"
             alt="Plate"
             isExpanded={isLeftExpanded}
           />
@@ -318,18 +320,20 @@ const HomePage = () => {
         >
           <RecipesTitle>RECIPES</RecipesTitle>
           <RecipesContainer>
-            {Array.from({ length: 3 }).map((_, index) => (
-              <RecipeLink key={index} href={`/recipe${index + 1}`}>
-                <RecipeImage
-                  src={`/IMG_0518.JPG`}
-                  alt={`Recipe ${index + 1}`}
-                />
-              </RecipeLink>
-            ))}
+            {/* Replaced the image sources */}
+            <RecipeLink>
+              <RecipeImage src="/Dhal.jpg" alt="Recipe 1" />
+            </RecipeLink>
+            <RecipeLink>
+              <RecipeImage src="/Samosa.jpg" alt="Recipe 2" />
+            </RecipeLink>
+            <RecipeLink>
+              <RecipeImage src="/Bakewell.jpg" alt="Recipe 3" />
+            </RecipeLink>
           </RecipesContainer>
         </RightSide>
       </Content>
-      <BottomTitle isVisible={showBottomTitle}>Dish Name</BottomTitle>
+      <BottomTitle href="/recipe/10" isVisible={showBottomTitle}>Cod Mornay</BottomTitle>
     </Container>
   );
 };
