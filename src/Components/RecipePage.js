@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import RecipeSearch from './RecipeSearch'; // Import the RecipeSearch component
+import RecipeDetailPage from './RecipeDetailPage'; // Import the RecipeDetailPage component
 
 const Container = styled.div`
   display: flex;
@@ -196,7 +197,7 @@ const RecipePage = () => {
         <RecipeSearch onSearchResults={handleSearchResults} />
         <RecipeGallery>
           {/* Render merged recipes (existing and search results) */}
-          {mergedRecipes.map(recipe => (
+          {recipes.map(recipe => (
             <Link to={`/recipe/${recipe.id}`} key={recipe.id}>
               <RecipeThumbnail>
                 <ThumbnailImage src={recipe.image} alt={recipe.title} />
